@@ -1,0 +1,1487 @@
+I/O Streams
+-----------
+A stream is a collection of data or flow of data. 
+We have two types of streams:
+1. Input Streams
+2. Output Streams
+
+
+1. Input Streams
+----------------
+These streams are used to read the data from the files, input devices, etc...
+An input stream sends data from a source into a program.
+
+
+2. Output Streams
+-----------------
+These streams are used to write the contents or data to the files, console, etc...
+An output stream sends data from program to the destination.
+
+Simply the input stream accepts the data and an output stream sends the data.
+
+These Stream classes are divided into two types:
+1. Byte Oriented streams.
+2. Character Oriented Streams.
+
+
+
+------------------------------------------------------------------
+
+
+
+1. Byte Oriented streams
+------------------------
+These streams represents (reads/writes) the content as Bytes or int that range from 0 to 255. All types of data can be expressed in byte format.
+
+In Byte Oriented Stream we have two important class
+1. Input Stream
+2. Output Stream
+
+
+
+1. Input Stream
+---------------
+This is an abstract class which represents all the input stream class. This class is the super class for all the InputStream classes.
+
+InputStream
+-----------
+	|-> ByteArrayInputStream
+	|-> FileInputStream
+	|-> ObjectInputStream
+	|-> AudioInputStream
+	|-> FilterInputStream
+		-----------------
+				|-> DataInputStream
+				|-> InflaterInputStream
+					-------------------
+						|-> GZIPInputStream
+						|-> ZipInputStream
+
+
+
+2. Output Stream
+----------------
+This is an abstract class which represents all the output stream class. This class is the super class for all the output stream classes
+
+OutputStream
+------------
+	|-> ByteArrayOutputStream
+	|-> FileOutputStream
+	|-> ObjectOutputStream
+	|-> AudioOutputStream
+	|-> FilterOutputStream
+		------------------
+				|-> DataOutputStream
+				|-> InflaterOutputStream
+					-------------------
+						|-> GZIPOutputStream
+						|-> ZipOutputStream
+
+
+
+
+
+
+
+FileInputStream Class
+---------------------
+A FileInputStream obtains input bytes from a file system.
+FileInputStream is meant for reading streams of raw bytes.
+
+
+Constructors
+------------
+FileInputStream()
+FileInputStream(String file_name)
+FileInputStream(File file)
+
+
+Methods
+-------
+int read()
+	reads a byte of data from the input
+
+int read(byte[] b)
+	reads up to b.length bytes of data from the input streams into the array of bytes
+
+int available()
+	returns the number of bytes that can be read from the FileInputStream without blocking.
+
+void close()
+	closes the FileInputStream and releases any system resources associated with the stream.
+
+
+Note:
+The read() method returns an integer value if their are bytes to read, other wise it returns "-1" indicating the end of the file.
+
+All methods of IO Stream classes throws IOExceptions.
+
+
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+class FileInputStreamDemo1
+{
+	public static void main(String[] args) throws IOException
+	{
+		FileInputStream fis = new FileInputStream("MyFile1.txt");
+
+		int i = fis.read();
+		System.out.println(i);		
+		System.out.print((char)i);
+
+		i = fis.read();	
+		System.out.print((char)i);
+
+		System.out.print((char)fis.read());
+		System.out.print((char)fis.read());
+		System.out.print((char)fis.read());
+		
+		fis.close();
+		System.out.println("\n");
+	}
+}
+
+
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+class FileInputStreamDemo2
+{
+	public static void main(String[] args) throws IOException,InterruptedException
+	{
+		FileInputStream fis = new FileInputStream("FileInputStreamDemo2.java");
+		int i;
+		
+		while((i=fis.read())!=-1)
+		{
+			System.out.print((char)i);
+			//Thread.sleep(100);
+		}
+		
+		fis.close();
+		System.out.println("\n");
+	}
+}
+
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Scanner;
+
+class FileInputStreamDemo3
+{
+	public static void main(String[] args) throws IOException,InterruptedException
+	{
+		String path;
+		Scanner s = new Scanner(System.in);
+
+		System.out.print("Enter the Path of the File : ");
+		path = s.next();
+
+		FileInputStream fis = new FileInputStream(path);
+		int i;
+
+		System.out.println("\nContents of : " + path + " file is");
+		System.out.println("----------------------------------\n");
+
+		while((i=fis.read())!=-1)
+		{
+			System.out.print((char)i);
+			Thread.sleep(100);
+		}
+		
+		fis.close();
+		System.out.println("\n");
+	}
+}
+
+
+
+
+-------------------------------------------------------------------
+
+
+
+FileOutputStream Class
+----------------------
+A FileOutputStream is an output stream for writing data to a file. FileOutputStream is meant for writing stream of raw data.
+
+Constructors
+------------
+FileOutputStream(File file)	
+	It creates a file output stream to write to the file represented by the specified File object.
+
+FileOutputStream(String name)
+	It creates a new file to write the contents, if the file already exists then it overwrites the old contents with the new contents.
+
+FileOutputStream(String name, boolean append)
+	It creates a new file if the file doesnot exist. If the file already exists the it appends the new contents to the end of the file.	
+
+
+
+Methods
+-------
+abstract void write(int b)
+	writes the specified byte to the output stream.
+
+void close()
+	closes the output stream and releases any system resources associated with the stream.
+
+void flush()
+	flushes the output stream and forces any buffered output bytes to be written.
+
+void write(byte[] b)
+	writes b.length bytes from the specified byte array to the output stream.
+
+void write(byte[] b, int off, int len)
+	writes len bytes from the specified byte array starting from offset "off" to the output stream.
+
+
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+class FileOutputStreamDemo1 
+{
+	public static void main(String[] args) throws IOException
+	{
+		FileOutputStream fos = new FileOutputStream("TestFile1.txt");
+
+		for(int i=65; i<=90; i++)
+		{
+			fos.write((char)i);
+			fos.write(' ');
+		}
+		fos.close();
+		System.out.println("Data Written to the File Completed Successfully... \n");
+	}
+}
+
+
+
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+class FileOutputStreamDemo2 
+{
+	public static void main(String[] args) throws IOException
+	{
+		FileOutputStream fos = new FileOutputStream("TestFile2.txt");
+
+		for(int i=65; i<=90; i++)
+		{
+			fos.write((char)i);
+			fos.write(' ');
+		}
+
+		String str = "Welcome to IOStreams";
+		byte[] b = str.getBytes();
+
+		fos.write(b);
+		fos.close();
+
+		System.out.println("Data Written to the File Completed Successfully... \n");
+	}
+}
+
+
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+class FileOutputStreamDemo3
+{
+	public static void main(String[] args) throws IOException
+	{
+		FileOutputStream fos = new FileOutputStream("TestFile3.txt",true);
+
+		/* FileOutputStream fos = new FileOutputStream("TestFile3.txt",true);
+		   ->If we do not specify "true" the old contents will be overriden by new contents
+		   ->If we specify "true" the newer contents will be added to the old contents		
+		*/
+
+
+		for(int i=65; i<=90; i++)
+		{
+			fos.write((char)i);
+			fos.write(' ');
+		}
+
+		String str = "Welcome to Java Programming. Thank you.";
+		byte[] b = str.getBytes();
+
+		fos.write(b);
+		fos.close();
+
+		System.out.println("Data Written to the File Completed Successfully... \n");
+	}
+}
+
+
+
+
+/*Java Program to Copy the contents of one file to another*/
+
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
+class FileOutputStreamDemo4
+{
+	public static void main(String[] args) throws IOException
+	{
+		FileInputStream  fis = new FileInputStream ("MyFile1.txt");
+		FileOutputStream fos = new FileOutputStream("MyFile2.txt");	//("MyFile2.txt",true);	//append mode
+
+		int i;
+		while((i=fis.read())!=-1)
+		{
+			fos.write((char)i);
+			System.out.print((char)i);
+		}
+
+		fis.close();
+		fos.close();
+		System.out.println("\n\nFile Copy Operation Completed Successfully...");
+	}
+}
+
+
+
+/*Java Program to Copy the contents of one file to another*/
+
+import java.util.Scanner;
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
+class FileOutputStreamDemo5
+{
+	public static void main(String[] args) throws IOException
+	{
+		Scanner s = new Scanner(System.in);		
+		
+		System.out.print("Enter the Source      File Name : ");
+		String SourceFile = s.next();
+
+		System.out.print("Enter the Destination File Name : ");
+		String DestinationFile = s.next();
+
+		try
+		{
+			FileInputStream  fis = new FileInputStream (SourceFile);
+			FileOutputStream fos = new FileOutputStream(DestinationFile);
+
+			System.out.println("\nContents of "+SourceFile+" is");
+			System.out.println("--------------------------------------------");
+
+			int i;
+			while((i=fis.read())!=-1)
+			{
+				fos.write((char)i);
+				System.out.print((char)i);
+			}
+			System.out.println("\n");
+			fis.close();
+			fos.close();
+
+			System.out.print("Writing the Data from Source File to Destination File");
+			for(int j=0; j<5; j++)
+			{
+				Thread.sleep(1000);
+				System.out.print(".");
+			}
+
+
+			fis = new FileInputStream (DestinationFile);
+			System.out.println("\n\nContents of "+DestinationFile+" is");
+			System.out.println("--------------------------------------------");
+			
+			while((i=fis.read())!=-1)
+			{				
+				System.out.print((char)i);
+			}
+			System.out.println("\n\n");
+			fis.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		System.out.println("File Copy Operation Completed Successfully...");
+	}
+}
+
+
+
+
+
+---------------------------------------------------------------------
+
+
+
+DataOutputStream Class
+----------------------
+public class DataOutputStream extends FileOutputStream
+
+A DataOutputStream lets an application to write primitive data types to an output stream. Futher you can read this data using the DataInputStream.
+
+Constructor
+-----------
+DataOutputStream(OutputStream out)
+	Creates a new DataOutputStream to write data to the specified underlying output stream.
+
+Methods
+-------
+void writeByte(int i)
+void writeBoolean(boolean b)
+void writeShort(short s)
+void writeLong(long l)
+void writeFloat(float f)
+
+
+
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+class DataOutputStreamDemo1
+{
+	public static void main(String[] args) throws IOException
+	{
+		DataOutputStream dos = new DataOutputStream(new FileOutputStream("Sample1.txt"));
+		
+		dos.writeByte(222);
+		dos.writeInt(125);
+		dos.writeChar('K');
+		dos.writeFloat(12.34f);
+		dos.writeShort(456);
+		dos.writeLong(1234567890);
+		dos.writeChars("ABC");
+		
+		dos.close();
+
+		System.out.println("\n\nData Written to the File Completed Successfully...");
+	}
+}
+
+
+-> To read the above saved data from the file we use DataInputStream class
+
+
+DataInputStream Class
+---------------------
+public class DataInputStream extends FileInputStream.
+
+A DataInputStream lets an application to read premitive data types from underlying input stream in a machine-independent way. 
+An application uses a DataOutputStream to write data that can be read by DataInputStream.
+
+Constructor
+-----------
+DataInputStream(InputStream in)
+	Creates a DataInputStream that uses the specified underlying InputStream.
+
+Methods
+-------
+byte readByte()
+int readInt()
+
+
+
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+class DataInputStreamDemo1
+{
+	public static void main(String[] args) throws IOException
+	{
+		DataInputStream dis = new DataInputStream(new FileInputStream("Sample1.txt"));		
+
+		System.out.println("Byte  Value : " + dis.readByte());
+		System.out.println("Int   Value : " + dis.readInt());
+		System.out.println("Char  Value : " + dis.readChar());
+		System.out.println("Float Value : " + dis.readFloat());
+		System.out.println("Short Value : " + dis.readShort());
+		System.out.println("Long  Value : " + dis.readLong());
+		System.out.println("Line  Value : " + dis.readLine());
+		
+		dis.close();
+
+		System.out.println("\n\nData Written to the File Completed Successfully...");
+	}
+}
+
+
+
+------------------------------------------------------------------------------------
+
+
+File Class
+----------
+This class deals with the files
+This class represents physical files and directories in the machine.
+
+Constructors
+------------
+File(File Parent, String Child)
+	Create a new file instance from a parent abstract path name and a child string path name.
+
+File(String PathName)
+	Creates a new File instance by converting the given path name string into an abstract path name.
+
+File(String parent, String Child)
+	Creates a new File instance from a parent path name String and a child path name String.
+
+
+Methods
+-------
+boolean canRead()
+	It returns true if the file/directory is readable other wise returns false.
+
+boolean canWrite()
+	It returns true if the file is writeable other wise returns false.
+
+boolean createNewFile()
+	Automatically creates a new empty file named by this abstract path name if and only if a file with this name doesnot exist.
+
+boolean delete()
+	Deletes the file or Directory.
+
+void deleteOnExit()
+	Requests that the file or directory denoted by this abstract path name be deleted when the virtual machine terminates.
+
+boolean exists()
+	Tests weather the file or directory exits.
+
+File getAbsoluteFiles()
+	Returns the absolute form of this abstract path name.
+
+String getAbsolutePath()
+	Returns the absolute path name.
+
+String getName()
+	Returns  the name of the file or directory denoted by this abstract path name.
+
+String getParent()
+	Returns the path name String of this abstract path names parent or null if this path name doesnot name a parent directory.
+
+boolean isDirectory()
+	It checks weather the given path is an directory or not, if yes returns true other wise returns false.
+
+boolean isFile()
+	It checks weather the given path is a file or not, if yes it returns true, other wise return false.
+
+boolean isHidden()
+	It returns true if the file/directory is hidden other wise returns false.
+
+void lastModified()
+	Returns the time that the file was last modified.
+
+long length()
+	Return the length of the file
+
+String[] list()
+	Returns an arry of string names of the files and directories.
+
+File[] listFiles()
+	Returns an array of abstract path names denoting the files in the directories
+
+static File[] listRoots()
+	Lists the available file ststem roots.
+
+boolean mkdir()
+	Creates the directory name by this abstract path name.
+
+boolean rename()
+	Renames the file denoted by this abstract path name.
+
+
+
+import java.io.File;
+import java.util.Date;
+import java.io.IOException;
+
+class FileDemo1 
+{
+	public static void main(String[] args) throws Exception
+	{
+		File f = new File("D:\\Harsha\\Speech.txt");
+
+		if(!f.exists())
+		{
+			System.out.println("The File or Directory Does not Exist");
+			System.exit(0);
+		}
+
+		if(f.isDirectory())
+		{
+			System.out.println("It is a Directory...");
+			
+			File files[] = f.listFiles();
+			for(int i=0; i<files.length; i++)
+			{
+				System.out.println(files[i]);
+			}
+		}
+		else
+		{
+			System.out.println("It is a File... \n");
+			System.out.println("Readable      : " + f.canRead());
+			System.out.println("Editable      : " + f.canWrite());
+			System.out.println("Is Hidden     : " + f.isHidden());
+			System.out.println("Last Modified : " + new Date(f.lastModified()));
+			System.out.println("Parent        : " + f.getParent());
+			System.out.println("Path          : " + f.getPath());
+			System.out.println("Absolute Path : " + f.getAbsolutePath());
+			System.out.println("Length        : " + f.length());
+		}
+
+		System.out.println();
+		File drives[] = File.listRoots();
+		for(int i=0; i<drives.length; i++)
+		{
+			System.out.print(" " + drives[i]);
+		}
+	}
+}
+
+
+
+
+
+Serialization
+-------------
+Writing the state of an object to a stream permanently is called Serialization.
+
+In order to transport object over the network they must be serialised.
+
+With out Serialization the objects cannot be transported across the network (Premitive type can be transported easily).
+
+In order to acheive serialization we have an interface called Serializable which is available in java.io.Serializable
+
+An object can be Serialized by implementing Serializable interface.
+
+Serializable interface is a null or empty interface (Because it doesnot contain any methods).
+
+
+
+
+ObjectOutputStream
+------------------
+public class ObjectOutputStream extends OutputStream
+
+An ObjectOutputStream writes java objects to an OutputStream.
+The objects can be read using ObjectInputStream.
+Only the objects that support the java.io.Serializable interface can be written to stream.
+
+Constructors
+------------
+ObjectOutputStream();
+ObjectOutputStream(OutputStream out);
+
+
+Methods
+-------
+void writeObject(Object obj)
+	write the specified object to the ObjectOutputStream
+
+
+
+
+ObjectInputStream
+-----------------
+public class ObjectInputStream extends InputStream
+
+An object InputStream deserializes the primitive data and object previously written in an ObjectOutputStream.
+
+Constructors
+------------
+ObjectOutputStream();
+ObjectOutputStream(InputStream in);
+
+Methods
+-------
+Object readObject()
+	Read an object from ObjectInputStream.
+
+
+
+
+File-1:
+-------
+
+import java.io.Serializable;
+class Employee implements Serializable 
+{
+	private int eid;
+	private String name;
+	private String desg;
+	private double sal;
+
+	Employee()
+	{
+	}
+
+	Employee(int eid, String name, String desg, double sal)
+	{
+		this.eid  = eid;
+		this.name = name;
+		this.desg = desg;
+		this.sal  = sal;
+	}
+
+	public void SetEid(int eid)
+	{
+		this.eid = eid;
+	}
+	public int GetEid()
+	{
+		return eid;
+	}
+
+	public void SetEname(String name)
+	{
+		this.name = name;
+	}
+	public String GetEname()
+	{
+		return name;
+	}
+
+	public void SetDesg(String desg)
+	{
+		this.desg = desg;
+	}
+	public String GetDesg()
+	{
+		return desg;
+	}
+
+	public void SetSal(double sal)
+	{
+		this.sal = sal;
+	}
+	public double GetSal()
+	{
+		return sal;
+	}
+
+	public String EmployeeDetails()
+	{
+		return "EmpID : " + eid + "\nEname : " + name + "\nDesg : " + desg + "\nSal  : " + sal;
+	}
+}
+
+
+
+File-2:
+-------
+import java.io.*;
+class WriteObject 
+{
+	public static void main(String[] args) throws IOException
+	{
+		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("Employee.txt"));
+
+		Employee e1 = new Employee(1001, "Ravi", "Manager",    35000.49);
+		Employee e2 = new Employee(1002, "Vasu", "Lead",       30000.83);
+		Employee e3 = new Employee(1003, "Ramu", "Programmer", 28000.64);
+
+		os.writeObject(e1);
+		os.writeObject(e2);
+		os.writeObject(e3);
+
+		os.close();
+
+		System.out.println("\nData Written to the file completed Successfully...");
+	}
+}
+
+
+File-3:
+-------
+import java.io.*;
+class ReadObject 
+{
+	public static void main(String[] args) throws Exception
+	{
+		ObjectInputStream is = new ObjectInputStream(new FileInputStream("Employee.txt"));
+
+		Employee e1 = (Employee)is.readObject();
+		Employee e2 = (Employee)is.readObject();
+		Employee e3 = (Employee)is.readObject();
+
+		System.out.println(e1.EmployeeDetails() + "\n");
+		System.out.println(e2.EmployeeDetails() + "\n");
+		System.out.println(e3.EmployeeDetails() + "\n");
+	}
+}
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+2. Character Oriented Streams
+-----------------------------
+These streams are used to read and write the character to and from the streams.
+Character oriented streams only handles textual data. 
+These streams are differ from byte stream because java's character set supports UNICODE (it is a standard, that includes more characters (0 to 65535)) which can be expressed easily using bytes.
+
+
+Note: 
+The character and byte streams are sequential access streams.
+
+
+In Character Oriented Stream we have two important super classes
+1. Reader
+2. Writer
+
+
+1. Reader
+---------
+This is an abstract class to read the characters from the stream. This is the super class for all the character oriented stream classes.
+
+Reader
+------
+	|-> FileReader
+	|-> BufferedReader
+	|-> InputStreamReader
+
+
+Constructors
+------------
+Reader();
+Reader(object);
+
+
+Methods
+-------
+abstract void close()
+	closes the stream.
+
+void mark(int limit)
+	mark the present position in the stream.
+
+int read()
+	read a single character.
+
+int read(char[] cbuf)
+	reads characters into an array
+
+abstract int read(char[] cbuf, int off, int len)
+	reads character into a portion of an array
+
+boolean ready()
+	tell whether this stream is ready to be read.
+
+
+
+
+
+2. Writer
+---------
+This is an abstract class. This class is a super class for all the character stream classes to write the characters.
+
+Writer
+------
+	|-> FileWriter
+	|-> PrintWriter
+	|-> BufferedWriter
+	|-> OutputStreamWriter.
+
+
+Constructors
+------------
+Writer();
+Writer(object);
+
+
+Methods
+-------
+void write(int c)
+	writes a single character.
+
+void write(String str)
+	write a String.
+
+
+Reader and Writer are abstract super classes for character streams in java.io.reader and java.io.writer provides the functionality to read and write 16-bit characters (character streams)
+
+The subclasses, InputStreamReader and OutputStreamWriter are used to read and write 8-bit (1 byte) (byte streams). These streams are used read and write binary data such as images and sounds.
+
+All of the streams (readers and writers) of input/output streams are automatically opened when created and they are closed explicitly by calling close() method, or the garbage collector can implicitly close it, which occurs when object is no longer referenced.
+
+All the classes used for input/output operations, which are included in java.io package.
+
+
+
+
+BufferedReader Class
+---------------------
+public class BufferedReader extends Reader.
+
+Reads text from a character input stream, buffering characters so as to provide for the efficient reading of character, arrays and lines.
+
+Constructors
+------------
+
+BufferedReader(Reader in)
+	Creates a Buffering character input stream that uses a default sized input buffer.
+
+BufferedReader(Reader in, int size)
+	Creates a Buffering character input stream that uses a input buffer of the specified size.
+
+
+Methods
+-------
+int read()
+	Read a simple character
+
+String readLine()
+	Read a Line of text. It returns a Sting on reaching end of the file it returns null.
+
+int read(char[] cbuf, int off, int len)
+	Read characters into a portion of an array.
+
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+class BufferedReaderDemo1
+{
+	public static void main(String[] args) throws IOException,InterruptedException
+	{
+		BufferedReader br = new BufferedReader(new FileReader("BufferedReaderDemo1.java"));
+		String s=" ";
+
+		while((s=br.readLine())!=null)
+		{
+			System.out.println(s);
+			Thread.sleep(500);
+		}
+		br.close();
+	}
+}
+
+
+
+
+
+BufferedWriter Class
+--------------------
+
+public class BufferedWriter extends Writer
+
+Writes text to a character-output stream, buffering characters so as to provide for the efficient writing of single characters, arrays, and strings.
+
+
+Constructors
+------------
+BufferedWriter(Writer out)
+	Creates a buffered character-output stream that uses a default-sized output buffer.
+
+BufferedWriter(Writer out, int size)
+	Creates a new buffered character-output stream that uses an output buffer of the given size.
+
+
+Methods
+-------
+void close()								Closes the stream, flushing it first.
+void flush()								Flushes the stream.
+void newLine()								Writes a line separator.
+void write(char[] cbuf, int off, int len)	Writes a portion of an array of characters.
+void write(int c)							Writes a single character.
+void write(String s, int off, int len)		Writes a portion of a String.
+
+
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+ 
+public class BufferedWriterDemo1 
+{
+	public static void main(String[] args) throws IOException
+	{
+		String str = "Welcome to BufferedWriter Demo";
+		BufferedWriter bw = new BufferedWriter(new FileWriter("BFile1.txt"));
+		bw.write(str);			
+		bw.close(); 
+		System.out.println("Done");
+	}
+}
+
+
+
+
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.io.IOException;
+
+public class BufferedWriterDemo2
+{
+	public static void main(String[] args) throws IOException
+	{
+		System.out.print("Enter the path of the file : ");
+		String path = new java.util.Scanner(System.in).nextLine();
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+
+		String str = ""; 
+		String ch = "";
+		do
+		{
+			System.out.println("Enter Some Data");  
+			str = br.readLine(); 
+			bw.write(str);
+			//bw.write("\n");
+			bw.newLine();
+			bw.flush();
+
+			System.out.print("\nDo You Want To Enter Another Line (y/n) : ");
+			ch = br.readLine();
+			System.out.println();
+		}    
+		while(ch.equals("y"));
+
+		br.close();  
+		bw.close();  
+	}
+}
+
+
+
+import java.io.*;
+class Input
+{
+	public static void main(String a[])throws IOException
+	{
+		//attach the Keyboard to InputStreamReader
+		InputStreamReader obj=new InputStreamReader(System.in);
+
+		//attach InputStreamReader to BufferedReader
+		BufferedReader br=new BufferedReader(obj);
+
+		System.out.println("Enter any String : ");
+		String n = br.readLine();
+
+		//float n=Float.parseFloat(ch);
+		//int n=Integer.parseInt(ch);
+		System.out.println("U have Entered:"+n);
+	}
+}
+
+
+
+
+
+PrintWriter class
+-----------------
+public class PrintWriter extends Writer
+
+This class implements all of the print methods found in PrintStream class.
+It doesnot contain methods for writing raw bytes.
+
+Unlike the PrintStream class, if automatic flushing is enabled it will be done only when one of the println, printf or format methods are invoked, rather than whenever a newline character happens to be output.
+
+These methods use the platforms own notation of the line separator rather than the newline character.
+
+Methods in this class never throw IOExceptions, althow some of its constructors may.
+
+Constructors
+------------
+PrintWriter(OutputStream out)
+	creates a new PrintWriter without automatic flushing from an existing OutputStream.
+
+PrintWriter(OutputStream out, boolean autoFlush)
+	creates a new PrintWriter from an existing OutputStream.
+
+PrintWriter(String fileName)
+	Creates a new PrintWriter, without automatic line flushing with the specified file name.
+
+PrintWriter(Writer out)
+	creates a new PrintWriter, without automatic line flushing.
+
+PrintWriter(Writer out, boolean autoFlush)
+	Creates a new PrintWriter.
+
+
+Methods
+-------
+void close() 
+void flush() 
+void print(boolean b) //all premitive types as parameters
+void println() 
+void write(int c) 
+void write(String s) 
+void write(String s, int off, int len) 
+PrintWriter printf(String format, Object... args) 
+PrintWriter format(String format, Object... args) 
+
+
+
+import java.io.*;
+public class PrintWriterDemo1
+{
+	public static void main(String[] args) 
+	{
+		String s = "Hello World";
+		try 
+		{         
+			PrintWriter pw = new PrintWriter(System.out);
+			pw.format("This is a %s program", s);
+			pw.println();
+			pw.format("This is a %s program with %d \n\n", s, 100);
+			pw.flush();
+		} 
+		catch (Exception ex) 
+		{
+			ex.printStackTrace();
+		}
+	}
+}
+
+
+
+
+import java.io.*;
+public class PrintWriterDemo2
+{
+	public static void main(String[] args) throws Exception
+	{
+		String s = "Hello World";
+		PrintWriter pw = new PrintWriter("PWFile1.txt");
+
+		pw.format("This is a %s program", s);
+
+		pw.println();		
+
+		pw.format("This is a %s program with %d \n\n", s, 100);
+
+		pw.flush();
+	}
+}
+
+
+
+
+Jar Utility Tool
+----------------
+This is used to create jar files (to compress and decompress the file) and to bind individual files in to single file.
+
+jar utility tool has some options
+---------------------------------
+
+-c	: create new archive (it creates a compressed file or directory).
+-t	: lists the table of contents of file.
+-x	: extract the files from the compressed file.
+-v	: generates verbos output on standard output.
+-f	: specifies the compressed file name.
+-m	: includes manifest information from the specified manifest file.
+
+inflated - compressed.
+deflated - decompressed.
+
+Syntax:
+-------
+>jar [-]cvf <outputfile.jar> <list of files>
+
+example 
+-------
+Open Command Prompt and go the specified folder, where the files has to be compressed.
+
+for compression
+---------------
+Type the following command in the command prompt.
+
+D:\Harsha\Files\>jar -cvf IOJAR.jar .
+
+v - displays all the information.
+. - files in the current working directory.
+. - represents path or current working directory files.
+
+
+if we give "v" in -cvf it displays
+adding: A.txt(in=460) (out=260) (defalted 43%)
+.
+.
+.
+etc
+
+if we donot give "v" in -cvf like -cf
+it wont display any details.
+
+
+
+
+for decompression
+-----------------
+Type the following command in the command prompt.
+
+D:\Harsha\Files\>jar -xf IOJAR.jar
+
+it will decompress the IOJar file
+
+
+
+
+
+
+
+GZIPOutputStream class
+----------------------
+public class GZIPOutputStream extends DeflaterOutputStream
+
+This class implements a stream filter for writing compressed data in the GZIP file format.
+
+
+
+Constructors
+------------
+GZIPOutputStream(OutputStream)
+	Creates a new output stream with a default buffer size.
+GZIPOutputStream(OutputStream, int)
+	Creates a new output stream with the specified buffer size.
+
+
+Methods
+-------
+void close()
+	Writes remaining compressed data to the output stream and closes the underlying stream.
+
+void finish()
+	Finishes writing compressed data to the output stream without closing the underlying stream.
+
+void write(byte[], int, int)
+	Writes array of bytes to the compressed output stream.
+
+
+
+import java.io.*;
+import java.util.zip.GZIPOutputStream;
+class  GZIPOutputStreamDemo1
+{
+	public static void main(String[] args) throws Exception
+	{
+        GZIPOutputStream zip = new GZIPOutputStream(new FileOutputStream(new File("ztmp1.zip")));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(zip, "UTF-8"));
+
+        String[] data = new String[] { "this", "is", "some", "data", "in", "a", "list" };
+
+        for(String line : data)
+        {
+            bw.append(line);
+            bw.newLine();
+        }
+		bw.close();
+		zip.close();
+	}
+}
+
+
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.zip.GZIPOutputStream;
+
+public class GZIPOutputStreamDemo2 
+{	
+	public static void main(String[] args) 
+	{
+		Scanner s = new Scanner(System.in);
+		System.out.print("Enter the Paht of Source File : ");
+		String sf = s.next();
+		System.out.print("Enter the Paht of Destination File with .gzip as its extension : ");
+		String df = s.next(); 
+
+        byte[] buffer = new byte[1024];
+        try 
+		{
+			FileOutputStream fos =new FileOutputStream(df);
+            GZIPOutputStream gzos = new GZIPOutputStream(fos);
+            FileInputStream fis = new FileInputStream(sf); 
+
+            int i;
+            while((i=fis.read(buffer))>0) 
+			{
+                gzos.write(buffer, 0, i);
+            }
+            fis.close();
+            gzos.finish();
+            gzos.close();
+
+            System.out.println("The file was compressed successfully!");
+        }
+		catch (IOException ex) 
+		{
+            ex.printStackTrace();
+        }
+    } 
+}
+
+
+
+
+
+GZIPIntputStream class
+----------------------
+public class GZIPInputStream extends InflaterInputStream
+
+This class implements a stream filter for reading compressed data in the GZIP file format.
+
+
+Constructors
+-------------
+GZIPInputStream(InputStream in)
+	Creates a new input stream with a default buffer size.
+
+GZIPInputStream(InputStream in, int size)
+	Creates a new input stream with the specified buffer size.
+
+
+Methods
+-------
+
+void close()
+	Closes this input stream and releases any system resources associated with the stream.
+
+int	read(byte[] buf, int off, int len)
+	Reads uncompressed data into an array of bytes.
+	off - offset
+	len - length
+
+
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
+public class GZIPInputStreamDemo1
+{
+	public static void main(String[] args)
+	{
+		Scanner s = new Scanner(System.in);
+		System.out.print("Enter the Paht of Source File with .gzip as its extension : ");
+		String sf = s.next();
+		System.out.print("Enter the Paht of Destination File  : ");
+		String df = s.next(); 
+
+		byte[] buffer = new byte[1024];
+        try 
+		{
+			FileInputStream fis = new FileInputStream(sf);
+            GZIPInputStream gzis= new GZIPInputStream(fis);
+            FileOutputStream fos = new FileOutputStream(df);
+
+			int i;
+            while((i=gzis.read(buffer))>0) 
+			{
+                fos.write(buffer, 0, i);
+            }
+            gzis.close();
+            fos.close(); 
+            System.out.println("The file was decompressed successfully!");
+		}
+		catch(IOException ex)
+		{
+			ex.printStackTrace();
+        }
+    }
+}
+
+
+
+
+
+GZIPIntputStream and GZIPOutputStream classes
+---------------------------------------------
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.Scanner;
+
+public class GZIPInputStream_GZIPOutputStream_Demo1
+{
+	public static void main(String[] args) 
+	{
+		Scanner s = new Scanner(System.in);
+		System.out.print("Enter the Paht of Source File : ");
+		String sf = s.next();
+		System.out.print("Enter the Paht of Destination File with .gzip as its extension : ");
+		String zf = s.next();
+		System.out.print("Enter the Paht of Destination File : ");
+		String df = s.next();		
+
+        byte[] buffer = new byte[1024];
+        try 
+		{
+            FileOutputStream fos  = new FileOutputStream(zf);
+            GZIPOutputStream gzos = new GZIPOutputStream(fos);
+            FileInputStream fis   = new FileInputStream(sf);
+
+            int i;
+
+            while ((i=fis.read(buffer))>0)
+			{
+                gzos.write(buffer, 0, i);
+            } 
+            fis.close(); 
+            gzos.finish();
+            gzos.close();
+
+			fos=null;
+			gzos=null;
+			fis=null;
+            System.out.println("The file was compressed successfully!"); 
+
+			fis  = new FileInputStream(zf);
+            GZIPInputStream gzis = new GZIPInputStream(fis);
+            fos  = new FileOutputStream(df);
+
+			while((i=gzis.read(buffer))>0)
+			{
+                fos.write(buffer, 0, i);
+            } 
+
+            gzis.close();
+            fos.close();
+            System.out.println("The file was decompressed successfully!");
+
+
+        } 
+		catch(IOException ex)
+		{
+            ex.printStackTrace();
+        }
+    }
+}
